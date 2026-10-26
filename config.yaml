@@ -1,0 +1,279 @@
+# Single source of truth for the pipeline: paths, constants, station ids and model specification.
+# Any value can be overridden from the command line, e.g.
+#   python main.py chilgrove --set data.history_days=7 --set training.epochs=5
+# "{borehole}" in a path is replaced with the borehole key being modelled, "{geosmart_prefix}" with its lower-case GeoSmart prefix.
+
+paths:
+  hde_dir: data/hde/{borehole}                    # 15-min HDE csvs (written by processing/download_hde.py)
+  geosmart_dir: data/geosmart/{geosmart_prefix}    # <dir>/<prefix>_forecasts.csv.gz (written by processing/download_geosmart.py)
+  gefs_csv: data/gefs/{borehole}_gefs_forecasts.csv
+  models_dir: models                              # models/<borehole>/<run_id>/<variant>/
+  results_dir: results                            # results/<borehole>/<run_id>/ and results/<borehole>/summary.csv
+
+boreholes:
+  chilgrove:
+    name: Chilgrove House
+    latitude: 50.92339127845877                   # GEFS nearest-grid-point lookup
+    longitude: -0.8141315903409244
+    geosmart_prefix: ChilgroveHouse               # S3 files are "<prefix>_headTimeSeries YYYY-MM-DD.csv"
+    hde_stations:                                 # Environment Agency Hydrology API station GUIDs
+      groundwater: 67c1c6de-4ad2-4636-ab5a-e0857ba15ec1   # Chilgrove House (groundwaterLevel)
+      rainfall: 3a00d049-d6fa-4f73-aa3c-b521454ee422      # Chilgrove House (rainfall)
+      flow: adb38d87-5c2a-48f8-8561-af1f497b8087          # Graylingwell, River Lavant (waterFlow)
+  compton:
+    name: Compton
+    latitude: 50.928302                   # GEFS nearest-grid-point lookup
+    longitude: -0.897889
+    geosmart_prefix: Compton
+    hde_stations:
+      groundwater: 8916b073-c6fc-4b26-b843-e883c0964aa3   # Compton
+      rainfall: d58493a8-2a6e-4fb3-b9ad-5a09a8c965dc      # Walderton
+      flow: 44aab3a9-f158-4f14-9fbc-061d5f1712a3          # Westbourne, River Ems
+  hursley:
+    name: Hursley
+    latitude: 51.021431                   # GEFS nearest-grid-point lookup
+    longitude: -1.390752
+    geosmart_prefix: Hursley
+    hde_stations:
+      groundwater: bcd03a7a-58ba-4eb8-a6e8-cf3ba5f18628   # Hursley
+      rainfall: 547c4dd3-5eca-4c37-a79e-bc1e5801b816      # Otterbourne
+      flow: 1b3f24d1-2c00-48b9-8eb9-79ed40b1a9e7          # Allbrook, The Itchen Navigation
+  bartonhorkstowroad:
+    name: Barton Horkstow Road
+    latitude: 53.674637                   # GEFS nearest-grid-point lookup
+    longitude: -0.448846
+    geosmart_prefix: BartonHorkstowRoad
+    hde_stations:
+      groundwater: 8f9ec200-b5cc-4ae8-8c95-f44fcf115bdd   # Barton Horkstow Road
+      rainfall: b8d4da34-3050-4b30-a288-6f58cdd00c60      # Goxhill
+      flow: d140f62b-b08a-4a64-be9d-f808f4e06140          # Laceby Beck, Laceby Beck
+  wolverton:
+    name: Wolverton
+    latitude: 51.138963                   # GEFS nearest-grid-point lookup
+    longitude: 1.236844
+    geosmart_prefix: Wolverton
+    hde_stations:
+      groundwater: 9de49e54-a67b-4e91-8b93-ab4a15c955d8   # Wolverton
+      rainfall: 77c38de6-9185-43cd-b70e-863e481d65e5      # Lower Standen
+      flow: 7963009e-7d60-45d9-9ab6-35c176111128          # Crabble Mill, River Dour
+  houndeanbottom:
+    name: Houndean Bottom
+    latitude: 50.874079                   # GEFS nearest-grid-point lookup
+    longitude: -0.021704
+    geosmart_prefix: HoundeanBottom
+    hde_stations:
+      groundwater: ff553415-a989-4233-af6b-2a3613769adb   # Houndean Bottom
+      rainfall: 3724686d-985c-41c6-bb69-a482baaea6db      # Plumpton
+      flow: a3018470-7a36-49d3-b6a1-46b902b7d55d          # Lewes Winterbourne, Winterbourne Stream
+  lilleybottom:
+    name: Lilley Bottom
+    latitude: 51.89139                   # GEFS nearest-grid-point lookup
+    longitude: -0.320255
+    geosmart_prefix: LilleyBottom
+    hde_stations:
+      groundwater: 6b670f82-2ecb-4370-9856-6ff61ace6f1e   # Lilley Bottom
+      rainfall: 5b161d2b-ed17-4380-87b6-3821fc9cbae2      # Whitwell
+      flow: 3281b3cf-9010-4f38-8fec-8f8ba1343ea3          # Whitwell, River Mimram
+  ashridgewood:
+    name: Ashridge Wood
+    latitude: 51.498108                   # GEFS nearest-grid-point lookup
+    longitude: -1.289674
+    geosmart_prefix: AshridgeWood
+    hde_stations:
+      groundwater: a6a97d2a-7e19-4367-badd-774580a72de9   # Ashridge Wood
+      rainfall: 6d7fdbb7-fd33-44fe-a747-f89768f7b64b      # West Ilsley
+      flow: f40d1dc8-2f89-441f-963c-2b15f4cfd7ff          # Frilsham, River Pang
+  purleybury:
+    name: Purleybury
+    latitude: 51.343074                   # GEFS nearest-grid-point lookup
+    longitude: -0.103881
+    geosmart_prefix: Purleybury
+    hde_stations:
+      groundwater: f4c3a0d4-e3e9-4083-80a0-683b5a5ea0dc   # Purleybury
+      rainfall: bfad52d4-a4dd-43c9-a162-2f79bdbc71f7      # Purley Oaks
+      flow: efe2509e-d4c4-42a8-ae09-dcc1ffcbfe67          # Carshalton, Carshalton Branch|River Wandle
+  sweepslane:
+    name: Sweeps Lane
+    latitude: 51.391196                   # GEFS nearest-grid-point lookup
+    longitude: 0.123031
+    geosmart_prefix: SweepsLane
+    hde_stations:
+      groundwater: eeca5d11-7581-4008-91a5-3aaf969e7c68   # Sweeps Lane
+      rainfall: 03c27c97-917a-4970-8440-47db18a36c2c      # Orpington
+      flow: d7ba84de-0fa2-4577-9ef4-978335a86360          # Crayford, River Cray
+  northfieldfarm:
+    name: Northfield Farm
+    latitude: 51.486858                   # GEFS nearest-grid-point lookup
+    longitude: -1.436751
+    geosmart_prefix: NorthfieldFarm
+    hde_stations:
+      groundwater: f8e974b6-e0b7-4729-8249-09f173395a42   # Northfield Farm
+      rainfall: e3e29994-311f-4cbc-8d5f-e35d2937e334      # Chieveley
+      flow: 274563e1-9a34-42b0-8722-4518c40dee10          # Welford, River Lambourn
+  littlebucketfarm:
+    name: Little Bucket Farm
+    latitude: 51.182482                   # GEFS nearest-grid-point lookup
+    longitude: 1.035625
+    geosmart_prefix: LittleBucketFarm
+    hde_stations:
+      groundwater: 836bc258-0f1c-4445-9247-dfa66e2ffe88   # Little Bucket Farm
+      rainfall: 9d9a390f-6dfa-45d0-9657-7584da71b56f      # Kingsmill Down
+      flow: 3a1eb751-eb8b-49ae-b6d7-89ac8d9a2e9a          # Horton, Great Stour
+  farringdonstation:
+    name: Farringdon Station
+    latitude: 51.109062                   # GEFS nearest-grid-point lookup
+    longitude: -0.994904
+    geosmart_prefix: FarringdonStation
+    hde_stations:
+      groundwater: 5b60198a-de07-4328-bcc5-8bc082080f5d   # Farringdon Station
+      rainfall: b64e45f6-d58c-425f-be08-a04683b59ade      # East Worldham
+      flow: fc82d49c-8b70-4e21-b1e3-0b648bf5b835          # Caker Stream, Caker Stream|River Wey
+  follyfarm:
+    name: Folly Farm
+    latitude: 51.096272                   # GEFS nearest-grid-point lookup
+    longitude: -1.411547
+    geosmart_prefix: FollyFarm
+    hde_stations:
+      groundwater: 4aef88d7-3e01-49b3-b5e8-8afcc01c1e8c   # Folly Farm
+      rainfall: cf7fa6ec-5097-4c0a-978d-1f74cc222bed      # Broughton
+      flow: d96cf58d-21f6-49bd-85e1-8db63a693645          # Chilbolton Total, River Test
+  rockley:
+    name: Rockley
+    latitude: 51.444578                   # GEFS nearest-grid-point lookup
+    longitude: -1.76348
+    geosmart_prefix: Rockley
+    hde_stations:
+      groundwater: ebe50755-be7d-4b06-aa5d-9e518f5b715e   # Rockley
+      rainfall: 7e4ca8fc-7ec9-4479-88a6-e2a7d56428aa      # Marlborough
+      flow: 54a2c462-fc61-49fb-affb-9d80607588c5          # Poulton Farm, River Og
+  newlandscorner:
+    name: Newlands Corner
+    latitude: 51.232887                   # GEFS nearest-grid-point lookup
+    longitude: -0.50851
+    geosmart_prefix: NewlandsCorner
+    hde_stations:
+      groundwater: 8b4ac0c3-2c32-4a99-badc-ffc5f29937a7   # Newlands Corner
+      rainfall: a749701a-d502-470c-a5ab-da584aa9883e      # Guildford
+      flow: 70e18a89-96dd-4a04-8163-fc685e92bb09          # Shalford, River Tillingbourne|Tilling Bourne
+  lanhamlane:
+    name: Lanham Lane
+    latitude: 51.114524                   # GEFS nearest-grid-point lookup
+    longitude: -1.155707
+    geosmart_prefix: LanhamLane
+    hde_stations:
+      groundwater: f0f4f9fc-048c-44fe-a6ea-14ca419a3641   # Lanham Lane
+      rainfall: 5d56abcb-da2f-4870-89f7-c3afb7559594      # Bishops Sutton
+      flow: 2bae7d6b-cd13-4db3-b2e2-aae042af76e3          # Drove Lane Main, River Alre
+  dickleydown:
+    name: Dickley Down
+    latitude: 50.800191                   # GEFS nearest-grid-point lookup
+    longitude: -2.502719
+    geosmart_prefix: DickleyDown
+    hde_stations:
+      groundwater: b38aebec-62f9-470d-a4dc-609b65763b82   # Dickley Down
+      rainfall: 8fcffa7e-8b31-4a88-9d0e-8e7eba50572d      # Evershot
+      flow: 4485824a-191e-4504-b0e4-7fa2e2119fb6          # Sydling St Nicholas, Sydling Water
+
+download:
+  update: false                                   # false = skip files that already exist locally; true = top up with newer data
+  gefs:
+    start: "2020-10-01"                           # first init date in the GEFS 35-day archive
+    end: null                                     # null = latest available
+    workers: 16                                   # parallel threads for the GEFS download (1 = serial)
+    refresh: false                                # true = re-download everything instead of appending new inits
+
+data:
+  target: total_flow                              # total_flow | baseflow | runoff: the flow component that is predicted (Boughton separation of the observed daily flow, see `baseflow` below)
+  step_minutes: 15                                # resolution of the HDE data and the encoder input
+  target_mode: delta_log_last                # absolute | delta_log_last (predict log-flow change from the recent observed flow, which becomes a decoder input) | anomaly (log-flow departure from the seasonal climatology median)
+  anchor_hours: 24                                # delta_log_last: the anchor is the mean observed flow over this many hours before the origin
+  seasonal_window_days: 15                        # seasonal climatology pools training flow within +/- this many days of the day of year
+  output_step_minutes: 360                        # resolution of the predicted flow (mean of the 15-min flow over each bin); multiple of step_minutes, divides gefs.bin_hours
+  history_days: 14                                # encoder window (HDE rainfall + groundwater)
+  horizon_days: 28                                # predicted flow window (horizon_days * 1440 / output_step_minutes values)
+  decoder_days: 28                                # forecast context given to the decoder (>= horizon_days)
+  origin_time: "12:00"                            # UTC time of day each forecast is issued; one sample per day
+  max_history_missing_fraction: 0.1               # drop samples whose encoder window has more missing values
+  fill_limit_steps: 96                            # forward-fill limit (steps) for short groundwater gaps
+  gefs:
+    bin_hours: 6                                  # GEFS rainfall is aggregated to this resolution (= decoder token length)
+    availability_lag_hours: 6                     # a 00Z init is only usable this long after init_time
+    max_age_hours: 24                             # reject forecasts older than this at the origin time
+  geosmart:
+    availability_lag_hours: 0                     # extra lag after the last historic (ID 0) timestamp in each file
+    max_age_hours: 24                             # reject forecasts older than this at the origin time
+    min_member_fraction: 0.5                      # use the members present on the last forecast day if they are >= this fraction of the full ensemble (else only the members complete over the leading days with the full ensemble)
+    min_members: 2                                # members needed to compute a standard deviation
+  splits:
+    train_fraction: 0.7
+    val_fraction: 0.15                            # test gets the remainder; fractions apply to the time span left after two purge gaps
+    min_samples_per_split: 5
+  extreme:
+    quantile: 0.95                                # events = flow above this quantile of historic flow (up to end of train)
+    prediction_quantile: 0.5                      # predicted quantile compared to the threshold to flag an event
+  baseflow:                                       # Boughton filter on observed daily flow: defines the baseflow/runoff targets and labels target steps by regime
+    boughton_k: 0.95
+    boughton_C: 0.5
+    bfi_threshold: 0.9                              # day with baseflow/flow >= this = baseflow-dominated, otherwise runoff-dominated
+
+model:
+  d_model: 32                                     # small model: only ~1,000 training samples (~100 independent periods)
+  n_heads: 4
+  n_encoder_layers: 1
+  n_decoder_layers: 1
+  dim_feedforward: 64
+  dropout: 0.3
+  encoder_patch_steps: 24                         # encoder steps merged into one token (24 x 15 min = 6 h, the decoder token length): 14 days -> 56 tokens
+  quantiles: [0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95]
+
+training:
+  seed: 42
+  device: auto                                    # auto | cpu | cuda | mps
+  epochs: 100
+  batch_size: 16
+  learning_rate: 0.001
+  weight_decay: 0.01
+  grad_clip: 1.0
+  early_stopping_patience: 15
+
+ensemble:                                         # GeoSmart members: the model sees one member trajectory at a time
+  val_members_per_sample: 5                       # fixed random members per validation sample (early stopping loss)
+  pool_draws_per_member: 64                       # probability levels drawn from each member's predictive distribution when pooling
+
+ablation:
+  restrict_to_common_samples: true                # every variant trains/tests on the same origins (fair comparison)
+  # Optional GeoSmart options (only used when use_geosmart is true; defaults shown):
+  #   geosmart_mode: level | anomaly        anomaly = member level minus its own level at the forecast origin (trajectory only)
+  #   geosmart_ensemble: members | mean     mean = a single input, the ensemble mean, instead of one member at a time
+  #   geosmart_skip: false                  true = linear skip from the GeoSmart channel at each output token to that token's outputs
+  # `without_geosmart` is the baseline every other variant is compared with.
+  variants:
+    - name: with_geosmart
+      use_gefs: true
+      use_geosmart: true
+    - name: without_geosmart
+      use_gefs: true
+      use_geosmart: false
+    - name: geosmart_anomaly
+      use_gefs: true
+      use_geosmart: true
+      geosmart_mode: anomaly
+    - name: geosmart_skip
+      use_gefs: true
+      use_geosmart: true
+      geosmart_skip: true
+    - name: geosmart_mean
+      use_gefs: true
+      use_geosmart: true
+      geosmart_ensemble: mean
+    - name: geosmart_anomaly_mean_skip
+      use_gefs: true
+      use_geosmart: true
+      geosmart_mode: anomaly
+      geosmart_ensemble: mean
+      geosmart_skip: true
+
+final_run:                                        # `python main.py all-chalk-final`: multi-seed with vs without GeoSmart
+  seeds: [42, 43, 44, 45, 46]
+  baseline: without_geosmart
+  geosmart: with_geosmart                         # the GeoSmart variant compared with the baseline

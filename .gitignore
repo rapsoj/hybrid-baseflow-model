@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+.pytest_cache/
+data/
+models/
+results/
+.DS_Store
+*.py[cod]
+.ipynb_checkpoints/

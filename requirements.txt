@@ -1,0 +1,11 @@
+torch
+numpy
+pandas>=2
+pyyaml
+requests
+xarray
+dynamical-catalog
+pytest
+matplotlib
+geopandas
+shapely
